@@ -26,5 +26,5 @@ class DB:
         DB.conn.close()
 
     @staticmethod
-    def exec(q: str):
-        DB.cursor.execute(q)
+    def exec(q: str, args: list):
+        DB.cursor.execute(q, args)
