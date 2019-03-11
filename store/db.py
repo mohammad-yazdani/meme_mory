@@ -7,7 +7,7 @@ class DB:
 
     @staticmethod
     def start():
-        DB.conn = sqlite3.connect("data.sql")
+        DB.conn = sqlite3.connect("data.db")
         DB.cursor = DB.conn.cursor()
         DB.cursor.execute("CREATE TABLE IF NOT EXISTS memes ("
                           "id INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -24,3 +24,7 @@ class DB:
     @staticmethod
     def __del__(self):
         DB.conn.close()
+
+    @staticmethod
+    def exec(q: str):
+        DB.cursor.execute(q)

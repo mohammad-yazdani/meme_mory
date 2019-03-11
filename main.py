@@ -1,8 +1,16 @@
 from model.meme import Meme
+from store.db import DB
 
-while True:
-    my_prompt: str=input( )
-    params: list=my_prompt.split(" ")
-    this_meme=Meme(my_prompt[0],"",my_prompt[1],my_prompt[2],my_prompt[3],my_prompt[4])
+DB.start()
+if input()=='put':
+    while True:
+        my_prompt: str = input( )
+        params: list = my_prompt.split(" ")
+        this_meme = Meme(params[0],params[1],params[2],params[3],params[4])
+elif input()== 'get':
+    pass
+
+
+
 
 
