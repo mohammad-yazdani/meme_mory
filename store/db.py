@@ -11,7 +11,7 @@ class DB:
         DB.cursor = DB.conn.cursor()
         DB.cursor.execute("CREATE TABLE IF NOT EXISTS memes ("
                           "id INTEGER PRIMARY KEY AUTOINCREMENT, "
-                          "file BLOB, "
+                          "file BLOB UNIQUE, "
                           "tag1 TEXT, "
                           "tag2 TEXT, "
                           "tag3 TEXT, "
