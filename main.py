@@ -1,9 +1,13 @@
 from model.meme import Meme
 from store.db import DB
 from PIL import Image
+from external.pull import Fetch
 
 DB.start()
 
+Fetch(["sad", "bad"])
+
+exit(0)
 ctrl = input()
 if ctrl == 'put':
     while True:
