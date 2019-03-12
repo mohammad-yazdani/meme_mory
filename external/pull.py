@@ -1,6 +1,7 @@
 import requests
 import json
 
+
 class Fetch:
     endpoint: str = "http://version1.api.memegenerator.net/Generators_Search"
     key: str = "demo"

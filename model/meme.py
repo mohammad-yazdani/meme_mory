@@ -1,32 +1,45 @@
 import sqlite3
 
 from store.db import DB
+from store.table import Table
+
+from model.tag import Tag
+from model.link import Link
+
+import os.path
 
 
 class Meme:
     db: list = list()
 
-    def __init__(self, file_path: str, em1: str = "null",
-                 em2: str = "null", em3: str = "null", em4: str = "null"):
+    def __init__(self, file_path: str, tags: list):
+        image_format: str = os.path.splitext(file_path)[1]
         with open(file_path, "rb") as meme_file:
-            self.file_binary = meme_file.read()
-            self.em1 = em1
-            self.em2 = em2
-            self.em3 = em3
-            self.em4 = em4
+            file_binary = meme_file.read()
+            self.tags = tags
 
-            blob = sqlite3.Binary(self.file_binary)
-            query = "INSERT INTO memes (file, tag1, tag2, tag3, tag4) VALUES (?, ?, ?, ?, ?)"
+            blob = sqlite3.Binary(file_binary)
+            query = 'INSERT INTO memes (file, image_format) VALUES (?, ?)'
+            meme_id: int = -1
             try:
-                DB.exec(query, [blob, self.em1, self.em2, self.em3, self.em4])
-                DB.commit()
+                DB.exec(query, [blob, image_format])
+                meme_id = DB.commit()
             except sqlite3.IntegrityError:
                 pass
+            for tag in tags:
+                tag_obj: Tag = Tag(tag)
+                Link(meme_id, tag_obj.row_id)
 
     @staticmethod
-    def match_meme_to_tags(tags: list):
-        DB.exec("SELECT file FROM memes WHERE tag1=? OR tag2=? OR tag3=? OR tag4=?", tags[0:4])
-        file = DB.cursor.fetchone()
-        with open("test.jpeg", "wb") as meme_out:
-            meme_out.write(file[0])
-        return "test.jpeg"
+    def create_table():
+        Table("memes", {"file": "BLOB", "image_format": "VARCHAR(32)"})
+
+    @staticmethod
+    def search_by_tags(tags: list):
+        in_clause: str = "("
+        for tag in tags:
+            in_clause += tag + ", "
+        in_clause += "null)"
+        res: list = DB.fetch(
+            "SELECT * FROM links WHERE (SELECT value FROM tags WHERE tags.id = tag_id) in " + in_clause)
+        print(res)

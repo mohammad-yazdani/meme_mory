@@ -1,3 +1,4 @@
+requests
 pysqlite3
 IPython
 Image
